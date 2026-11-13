@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AuthStatus, AuthStatusSkeleton } from "@/app/ui/auth-status";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,7 +26,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {/* Temporary top bar for testing sign-in. Replaced by the Header component once the design is approved. */}
+        <header className="flex h-16 items-center justify-between border-b border-zinc-200 bg-white px-4 sm:px-6">
+          <Link href="/" className="text-lg font-bold">
+            ArtisanLink
+          </Link>
+          <Suspense fallback={<AuthStatusSkeleton />}>
+            <AuthStatus />
+          </Suspense>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
