@@ -1108,7 +1108,7 @@
             <div class="chip" style="background: #2e6b4f; color: #fff">#2E6B4F</div>
             <div class="info">
               <span class="name">Moss</span
-              ><span class="role">Success messages, "Item published" confirmation</span
+              ><span class="role">Success messages, "Product published" confirmation</span
               ><span class="tw">text-moss · bg-moss</span>
             </div>
           </div>
@@ -1244,7 +1244,7 @@
             </div>
             <div class="type-row">
               <div class="spec"><b>H1</b>text-4xl · 36px · 700<br />one per page</div>
-              <div class="sample d-h1">Browse craft items</div>
+              <div class="sample d-h1">Browse products</div>
             </div>
             <div class="type-row">
               <div class="spec"><b>H2</b>text-2xl · 24px · 650<br />section titles</div>
@@ -1377,7 +1377,7 @@
           <div class="note">
             <h3>Elevation</h3>
             <p class="muted">
-              Flat by default: borders, not shadows. A soft shadow appears only on item card hover
+              Flat by default: borders, not shadows. A soft shadow appears only on ProductCard hover
               and on menus (<code>shadow-md</code>).
             </p>
           </div>
@@ -1408,11 +1408,11 @@
       <section id="layouts">
         <header>
           <span class="eyebrow">Layout patterns</span>
-          <h2>One app shell, five page layouts</h2>
+          <h2>One app shell, a layout for every route</h2>
           <p class="muted">
-            Every route in the specification shares the same header and footer. Wireframes use the
+            Every route in our team plan shares the same header and footer. Wireframes use the
             proposed colors so the balance of each screen is visible. Dashed boxes are content;
-            solid boxes are components.
+            solid boxes are components. Each caption names the teammate who owns that page.
           </p>
         </header>
         <div class="wires">
@@ -1445,7 +1445,7 @@
             <figcaption>
               <b>Home</b><span class="mono">/</span
               ><span class="muted"
-                >Owner: Daniel. Explains the site, links to the catalog and to sign-in.</span
+                >Owner: Daniel. Explains the site, links to /products and to sign-in.</span
               >
             </figcaption>
           </figure>
@@ -1497,21 +1497,21 @@
                   <div class="blk solid">Clear</div>
                 </div>
                 <div class="g g3">
-                  <div class="blk solid tall">Item card</div>
-                  <div class="blk solid tall">Item card</div>
-                  <div class="blk solid tall">Item card</div>
-                  <div class="blk solid tall">Item card</div>
-                  <div class="blk solid tall">Item card</div>
-                  <div class="blk solid tall">Item card</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
                 </div>
               </div>
               <div class="f-foot"><i></i><i></i><i></i></div>
             </div>
             <figcaption>
-              <b>Catalog</b><span class="mono">/items</span
+              <b>Products</b><span class="mono">/products</span
               ><span class="muted"
-                >Filter bar above a grid: 1 column on mobile, 2 at <code>sm</code>, 3 at
-                <code>lg</code>. Empty state replaces the grid.</span
+                >Owner: Samar. Filter bar above a grid: 1 column on mobile, 2 at <code>sm</code>, 3
+                at <code>lg</code>. Empty state replaces the grid.</span
               >
             </figcaption>
           </figure>
@@ -1524,7 +1524,7 @@
                 <div class="f-btn"></div>
               </div>
               <div class="f-body">
-                <div class="blk" style="font-size: 0.7rem">← Back to catalog</div>
+                <div class="blk" style="font-size: 0.7rem">← Back to products</div>
                 <div class="g g-detail">
                   <div class="g">
                     <div class="blk">Badges: category, country</div>
@@ -1532,7 +1532,7 @@
                     <div class="blk tall2">Description</div>
                   </div>
                   <div class="g" style="align-content: start">
-                    <div class="blk solid">Artisan name</div>
+                    <div class="blk solid">Artisan name → profile</div>
                     <div class="blk ind">WhatsApp</div>
                     <div class="blk solid">Email</div>
                   </div>
@@ -1541,10 +1541,78 @@
               <div class="f-foot"><i></i><i></i><i></i></div>
             </div>
             <figcaption>
-              <b>Item detail</b><span class="mono">/items/[itemId]</span
+              <b>Product details</b><span class="mono">/products/[id]</span
               ><span class="muted"
-                >Two columns at <code>lg</code> (2 : 1), contact panel sticky on the right; stacks
-                on mobile with contact first after the title.</span
+                >Owner: Samar. Two columns at <code>lg</code> (2 : 1), contact panel sticky on the
+                right; stacks on mobile with contact first after the title.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="g" style="grid-template-columns: auto 1fr; align-items: center">
+                  <div
+                    class="blk solid"
+                    style="width: 34px; height: 34px; border-radius: 50%; padding: 0"
+                  ></div>
+                  <div class="blk">Artisan name, country, short bio</div>
+                </div>
+                <div class="blk" style="font-size: 0.7rem">H2 Crafts by this artisan</div>
+                <div class="g g3">
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Artisan profile</b><span class="mono">/artisans/[id]</span
+              ><span class="muted"
+                >Owner: Shania. Public page. Profile header with GitHub avatar, then the same
+                product grid as <code>/products</code>.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="g" style="grid-template-columns: 1fr auto; align-items: center">
+                  <div class="blk" style="font-size: 0.7rem">H1 My products</div>
+                  <div class="blk ind">+ Add product</div>
+                </div>
+                <div class="g">
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Artisan dashboard</b><span class="mono">/dashboard/products</span
+              ><span class="muted"
+                >Owner: Shania. Signed-in artisans only. A simple list (not cards) so editing and
+                deleting are quick to scan. Delete asks for confirmation.</span
               >
             </figcaption>
           </figure>
@@ -1558,7 +1626,7 @@
               </div>
               <div class="f-body">
                 <div class="center-col g">
-                  <div class="blk" style="font-size: 0.7rem">H1 Add a craft item</div>
+                  <div class="blk" style="font-size: 0.7rem">H1 Add a product</div>
                   <div class="blk solid">Title</div>
                   <div class="blk solid tall">Description</div>
                   <div class="g g2">
@@ -1570,16 +1638,81 @@
                     <div class="blk solid">WhatsApp</div>
                     <div class="blk solid">Email</div>
                   </div>
-                  <div class="blk ind" style="width: 50%">Publish item</div>
+                  <div class="blk ind" style="width: 50%">Publish product</div>
                 </div>
               </div>
               <div class="f-foot"><i></i><i></i><i></i></div>
             </div>
             <figcaption>
-              <b>Add item</b><span class="mono">/items/new</span
+              <b>Add / edit product</b><span class="mono">/dashboard/products/new</span
               ><span class="muted"
-                >Signed-in artisans only. Single column, <code>max-w-xl</code>, errors under each
-                field.</span
+                >Owner: Shania (ProductForm). Same form for editing. Single column,
+                <code>max-w-xl</code>, errors under each field. Exact route to confirm with
+                Shania.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">H1 Checkout</div>
+                <div class="g g-detail">
+                  <div class="g" style="align-content: start">
+                    <div class="blk solid">Product · qty · price</div>
+                    <div class="blk solid">Product · qty · price</div>
+                    <div class="blk solid">Shipping / contact fields</div>
+                  </div>
+                  <div class="g" style="align-content: start">
+                    <div class="blk saf">Order summary + total</div>
+                    <div class="blk ind">Place order</div>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Checkout</b><span class="mono">/checkout</span
+              ><span class="muted"
+                >Owner: Martha. Same 2 : 1 split as product details; the summary panel stays sticky
+                on the right and moves below the list on mobile.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">H1 My orders</div>
+                <div class="g">
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Orders</b><span class="mono">/orders</span
+              ><span class="muted"
+                >Owner: Martha. List rows like the dashboard. Status uses badges: pending (saffron
+                tint), confirmed (moss), cancelled (madder).</span
               >
             </figcaption>
           </figure>
@@ -1596,7 +1729,7 @@
                   class="blk tall2 solid"
                   style="display: grid; place-items: center; text-align: center"
                 >
-                  404: "We couldn't find that item" + Back to catalog
+                  404: "We couldn't find that product" + Back to products
                 </div>
               </div>
               <div class="f-foot"><i></i><i></i><i></i></div>
@@ -1604,7 +1737,8 @@
             <figcaption>
               <b>Not found</b><span class="mono">not-found.tsx</span
               ><span class="muted"
-                >Covers unknown item IDs (FR-009). Same shell, centered message.</span
+                >Covers unknown product and artisan IDs (FR-009). Same shell, centered
+                message.</span
               >
             </figcaption>
           </figure>
@@ -1615,17 +1749,17 @@
             <h3>Header (Daniel)</h3>
             <p class="muted">
               White surface, bottom border, 64px tall, sticky. Left: ArtisanLink wordmark in
-              Bricolage, indigo. Center/right: "Browse" and "Add item". Far right: "Sign in" button,
-              or the GitHub avatar with a menu (Add item, Sign out) when signed in. Collapses to a
-              menu button below <code>md</code>.
+              Bricolage, indigo. Center/right: "Products" and "Orders". Far right: "Sign in" button,
+              or the GitHub avatar with a menu (My products, Add product, Sign out) when signed in.
+              Collapses to a menu button below <code>md</code>.
             </p>
           </div>
           <div class="note">
             <h3>Footer (Daniel)</h3>
             <p class="muted">
               Ink background, white and muted-light text. Three short columns: About ArtisanLink,
-              Explore (Browse, Add item), Team (four member names, course WDD 430). Stacks to one
-              column on mobile.
+              Explore (Products, Sell your crafts), Team (four member names, course WDD 430). Stacks
+              to one column on mobile.
             </p>
           </div>
         </div>
@@ -1638,16 +1772,17 @@
           <h2>The small kit every page builds from</h2>
           <p class="muted">
             These live previews use the exact proposed tokens. Each becomes one file in
-            <code>app/ui/</code> so nobody restyles buttons page by page.
+            <code>app/ui/</code> so nobody restyles buttons page by page. Button and InputField are
+            built by Martha, ProductCard by Samar and ProductForm by Shania, all from these styles.
           </p>
         </header>
 
         <div class="preview">
           <span class="preview-label">Buttons</span>
           <div class="c-row">
-            <button class="btn btn-primary" type="button">Publish item</button>
+            <button class="btn btn-primary" type="button">Publish product</button>
             <button class="btn btn-secondary" type="button">Clear filters</button>
-            <button class="btn btn-ghost" type="button">Back to catalog</button>
+            <button class="btn btn-ghost" type="button">Back to products</button>
             <button class="btn btn-github" type="button">
               <svg viewBox="0 0 16 16" aria-hidden="true">
                 <path
@@ -1663,12 +1798,12 @@
         </div>
 
         <div class="preview">
-          <span class="preview-label">Form fields and validation</span>
+          <span class="preview-label">InputField and validation (used in ProductForm)</span>
           <div class="cols-2">
             <div class="field">
               <label for="f-title">Title</label>
               <input id="f-title" type="text" value="Hand-woven alpaca scarf" />
-              <span class="hint">What buyers will see in the catalog.</span>
+              <span class="hint">What buyers will see on the products page.</span>
             </div>
             <div class="field">
               <label for="f-country">Country</label>
@@ -1701,7 +1836,7 @@
         </div>
 
         <div class="preview">
-          <span class="preview-label">Item cards and badges (catalog grid)</span>
+          <span class="preview-label">ProductCard and badges (/products grid)</span>
           <div class="item-cards">
             <article class="item-card">
               <div class="c-row" style="gap: 6px">
@@ -1740,7 +1875,7 @@
           <span class="preview-label">Empty results (FR-009)</span>
           <div class="empty">
             <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin: 0">
-              No items match Woodwork in Japan
+              No products match Woodwork in Japan
             </h4>
             <p class="d-small">
               Try another country or category, or clear the filters to see everything.
@@ -1761,8 +1896,9 @@
             <h3>Use</h3>
             <p class="muted">
               Tailwind CSS v4, already installed. Define the palette, fonts and radii once with
-              <code>@theme</code> in <code>app/globals.css</code>. Build five or six components in
-              <code>app/ui/</code>: Button, Input, Select, Badge, ItemCard, EmptyState.
+              <code>@theme</code> in <code>app/globals.css</code>. Build a small set of components
+              in <code>app/ui/</code>: Button, InputField, Select, Badge, ProductCard, ProductForm,
+              EmptyState.
             </p>
           </div>
           <div class="note">

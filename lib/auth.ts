@@ -20,7 +20,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 }
 
 /**
- * For Route Handlers (e.g. POST /api/items) and Server Actions.
+ * For Route Handlers (e.g. the artisan CRUD APIs) and Server Actions.
  * Reads the cookie fresh on every call, so the request authorizes itself.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
@@ -29,10 +29,10 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 }
 
 /**
- * For pages that need a signed-in artisan, such as /items/new (FR-002).
+ * For pages that need a signed-in artisan, such as /dashboard/products (FR-002).
  * Sends visitors to /login and brings them back afterwards.
  *
- * @param returnTo Path to come back to after signing in, e.g. '/items/new'.
+ * @param returnTo Path to come back to after signing in, e.g. '/dashboard/products'.
  */
 export async function requireUser(returnTo?: string): Promise<SessionUser> {
   const user = await getCurrentUser();
