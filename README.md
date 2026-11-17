@@ -32,7 +32,7 @@ ArtisanLink is a full-stack web application that allows local artisans from any 
    ```
 
 3. **Environment Variables:**
-   Create a `.env.local` file in the root directory and add your GitHub OAuth developer keys and MongoDB connection string.
+   Create a `.env.local` file in the root directory and add your GitHub OAuth developer keys and MongoDB connection string as `MONGODB_URI`.
 
 4. **Run the development server:**
    ```bash
