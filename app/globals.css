@@ -1,26 +1,74 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * ArtisanLink design tokens ("Indigo & Cotton").
+ * Source of truth: docs/design-language.html. Use these utilities in components
+ * (bg-indigo, text-ink, border-line, font-display...) instead of hex values.
+ */
+@theme {
+  /* Brand */
+  --color-indigo: #24427a;
+  --color-indigo-dark: #1a3360;
+  --color-indigo-tint: #e8edf6;
+  --color-saffron: #e3a62f;
+  --color-saffron-tint: #fbefd3;
+
+  /* Neutrals */
+  --color-cotton: #f6f6f3;
+  --color-surface: #ffffff;
+  --color-ink: #1b2433;
+  --color-muted: #586274;
+  --color-line: #d9dde4;
+  --color-line-strong: #7c8597;
+
+  /* Feedback */
+  --color-madder: #a23b32;
+  --color-moss: #2e6b4f;
+
+  /* Text on the dark (ink) footer */
+  --color-ink-muted: #b4bccb;
 }
 
+/* Font variables are set on <html> by next/font in app/layout.tsx. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage), system-ui, 'Segoe UI', sans-serif;
+  --font-sans: var(--font-figtree), system-ui, 'Segoe UI', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-cotton font-sans text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* One visible keyboard focus style everywhere: saffron stands out on indigo, ink and white. */
+  :focus-visible {
+    outline: 3px solid var(--color-saffron);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Page container: max-w-6xl with the agreed responsive gutters. */
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

@@ -1,10 +1,9 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
-import { signOut } from '@/lib/actions/auth';
+import { UserMenu } from './user-menu';
 
 /**
- * Shows "Sign in" for visitors, or the GitHub avatar and a sign-out button for artisans.
+ * Header account area: "Sign in" for visitors, the avatar menu for signed-in users.
  * Reads the session cookie, so always render it inside <Suspense>.
  */
 export async function AuthStatus() {
@@ -14,36 +13,18 @@ export async function AuthStatus() {
     return (
       <Link
         href="/login"
-        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800"
+        className="inline-flex h-10 items-center rounded-lg border border-line-strong bg-surface px-4 text-sm font-semibold text-ink hover:bg-indigo-tint"
       >
         Sign in
       </Link>
     );
   }
 
-  return (
-    <div className="flex items-center gap-3">
-      <Image
-        src={user.avatarUrl}
-        alt=""
-        width={32}
-        height={32}
-        className="h-8 w-8 rounded-full border border-zinc-200"
-      />
-      <span className="hidden text-sm font-medium sm:inline">{user.name}</span>
-      <form action={signOut}>
-        <button
-          type="submit"
-          className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"
-        >
-          Sign out
-        </button>
-      </form>
-    </div>
-  );
+  // Only the fields the menu displays are sent to the browser.
+  return <UserMenu name={user.name} login={user.login} avatarUrl={user.avatarUrl} />;
 }
 
-/** Placeholder with the same size as the button, so the header doesn't jump while loading. */
+/** Same size as the Sign in button, so the header doesn't jump while the session loads. */
 export function AuthStatusSkeleton() {
-  return <div className="h-9 w-20 animate-pulse rounded-lg bg-zinc-200" aria-hidden="true" />;
+  return <div className="h-10 w-24 animate-pulse rounded-lg bg-line/60" aria-hidden="true" />;
 }
