@@ -98,13 +98,17 @@ A visitor chooses a contact method shown on an item's detail page to reach its a
 
 The following endpoint inventory describes the requested public-facing catalog and listing operations. WhatsApp and email contact use the contact details returned for an item; they do not send messages through an ArtisanLink messaging endpoint.
 
-| Method | Endpoint              | Purpose                                                                                |
-| ------ | --------------------- | -------------------------------------------------------------------------------------- |
-| `GET`  | `/api/items`          | List available craft items; optional `category` and `country` filters may be combined. |
-| `POST` | `/api/items`          | Create a craft item for an authenticated artisan account owner.                        |
-| `GET`  | `/api/items/{itemId}` | Retrieve one item's detail and configured contact information.                         |
-| `GET`  | `/api/categories`     | Retrieve category choices for browsing and filtering.                                  |
-| `GET`  | `/api/countries`      | Retrieve country choices for browsing and filtering.                                   |
+| Method   | Endpoint                    | Purpose                                                                                   |
+| -------- | --------------------------- | ----------------------------------------------------------------------------------------- |
+| `GET`    | `/api/products`             | List available craft products; optional `category` and `country` filters may be combined. |
+| `POST`   | `/api/products`             | Create a craft product for an authenticated artisan account owner.                        |
+| `GET`    | `/api/products/{productId}` | Retrieve one product's detail and configured contact information.                         |
+| `PATCH`  | `/api/products/{productId}` | Update a product owned by the authenticated artisan.                                      |
+| `DELETE` | `/api/products/{productId}` | Delete a product owned by the authenticated artisan.                                      |
+| `GET`    | `/api/categories`           | Retrieve category choices for browsing and filtering.                                     |
+| `GET`    | `/api/countries`            | Retrieve country choices for browsing and filtering.                                      |
+
+Product writes require a valid GitHub session and an artisan user record in MongoDB. The artisan name is taken from that user record rather than accepted from the request body. Product creation and updates must preserve at least one valid WhatsApp or email contact.
 
 ### Implementation Priority
 
