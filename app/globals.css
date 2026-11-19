@@ -35,13 +35,24 @@
   --font-sans: var(--font-figtree), system-ui, 'Segoe UI', sans-serif;
 }
 
-@layer base {
-  html {
-    color-scheme: light;
-  }
+/*
+ * Page colors live outside @layer on purpose. Unlayered CSS always beats layered CSS,
+ * so if another stylesheet sets `body { background; color }` (Next.js's built-in error
+ * pages do, including a dark-mode variant), it would override a rule inside @layer.
+ * `html body` also out-ranks a plain `body` selector.
+ */
+html {
+  color-scheme: light;
+}
 
+html body {
+  background-color: var(--color-cotton);
+  color: var(--color-ink);
+}
+
+@layer base {
   body {
-    @apply bg-cotton font-sans text-ink antialiased;
+    @apply font-sans antialiased;
   }
 
   h1,
