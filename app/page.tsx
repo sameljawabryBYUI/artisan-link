@@ -5,6 +5,8 @@ import textilesImage from '@/public/images/categories/textiles.webp';
 import ceramicsImage from '@/public/images/categories/ceramics.webp';
 import woodworkImage from '@/public/images/categories/woodwork.jpg';
 import jewelryImage from '@/public/images/categories/jewelry.webp';
+import { ProductGrid } from '@/app/ui/product-grid';
+import { getFeaturedProducts } from '@/lib/featured-products';
 
 const iconProps = {
   viewBox: '0 0 24 24',
@@ -96,7 +98,8 @@ const buttonBase =
 export default function HomePage() {
   return (
     <main>
-      <Hero />
+      <HeroSection />
+      <FeaturedProducts />
       <HowItWorks />
       <Categories />
       <ArtisanCta />
@@ -104,7 +107,7 @@ export default function HomePage() {
   );
 }
 
-function Hero() {
+function HeroSection() {
   return (
     <section className="border-b border-line bg-surface">
       <div className="container-page grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.15fr_1fr]">
@@ -189,6 +192,43 @@ function WovenSwatch() {
         )}
       </svg>
     </div>
+  );
+}
+
+async function FeaturedProducts() {
+  const { products, isSample } = await getFeaturedProducts(4);
+
+  return (
+    <section className="container-page pt-12 md:pt-16">
+      <div className="space-y-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="space-y-2">
+            <h2 className="font-display text-3xl font-bold tracking-tight">Featured crafts</h2>
+            <p className="text-muted">
+              {isSample
+                ? 'Example listings. Real products from our artisans will appear here.'
+                : 'The newest pieces from our artisans.'}
+            </p>
+          </div>
+          <Link href="/products" className="font-semibold text-indigo hover:underline">
+            See all products →
+          </Link>
+        </div>
+        <ProductGrid
+          products={products}
+          columns={4}
+          emptyState={
+            <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-line-strong bg-surface p-6">
+              <p className="font-semibold">No products yet</p>
+              <p className="text-muted">Be the first artisan to list a craft on ArtisanLink.</p>
+              <Link href={SELL_HREF} className="font-semibold text-indigo hover:underline">
+                List your craft →
+              </Link>
+            </div>
+          }
+        />
+      </div>
+    </section>
   );
 }
 
