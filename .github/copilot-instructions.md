@@ -18,3 +18,6 @@
 
 - All shared UI components (Buttons, Inputs) should use Tailwind classes based on our design language document.
 - Ensure all API routes protect artisan-only actions (like creating products) using our RoleGuard authentication.
+
+
+
