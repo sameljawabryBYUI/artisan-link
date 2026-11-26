@@ -1,0 +1,1961 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ArtisanLink Design Language</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:ital,wght@0,400..700;1,400&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
+    <style>
+      /* Layout: one reading column of proposal sections; each section pairs a short rationale with a live "app preview" panel rendered in the proposed light theme. */
+      :root {
+        /* Page chrome (this proposal page) */
+        --bg: #f6f6f3;
+        --surface: #ffffff;
+        --fg: #1b2433;
+        --muted: #586274;
+        --line: #d9dde4;
+        --accent: #24427a;
+        --accent-tint: #e8edf6;
+        --code-bg: #eef0f3;
+
+        /* Proposed ArtisanLink palette (shown as specimens; fixed values) */
+        --al-cotton: #f6f6f3;
+        --al-surface: #ffffff;
+        --al-ink: #1b2433;
+        --al-muted: #586274;
+        --al-line: #d9dde4;
+        --al-line-strong: #7c8597;
+        --al-indigo: #24427a;
+        --al-indigo-dark: #1a3360;
+        --al-indigo-tint: #e8edf6;
+        --al-saffron: #e3a62f;
+        --al-saffron-tint: #fbefd3;
+        --al-madder: #a23b32;
+        --al-moss: #2e6b4f;
+
+        --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+        --font-body: 'Figtree', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #121722;
+          --surface: #1a2130;
+          --fg: #e7eaf0;
+          --muted: #a3acbb;
+          --line: #2e3747;
+          --accent: #9db6e4;
+          --accent-tint: #1f2b42;
+          --code-bg: #20283a;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #121722;
+        --surface: #1a2130;
+        --fg: #e7eaf0;
+        --muted: #a3acbb;
+        --line: #2e3747;
+        --accent: #9db6e4;
+        --accent-tint: #1f2b42;
+        --code-bg: #20283a;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding-block: 40px 80px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        text-wrap: balance;
+        line-height: 1.15;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        font-weight: 750;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 650;
+      }
+      p {
+        margin: 0;
+        max-width: 68ch;
+      }
+      a {
+        color: var(--accent);
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      code,
+      .mono {
+        font-family: var(--font-mono);
+        font-size: 0.86em;
+      }
+      code {
+        background: var(--code-bg);
+        padding: 0.1em 0.35em;
+        border-radius: 4px;
+      }
+      .eyebrow {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .muted {
+        color: var(--muted);
+      }
+
+      /* Masthead */
+      .masthead {
+        display: grid;
+        gap: 20px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--line);
+      }
+      .masthead .lede {
+        font-size: 1.15rem;
+        color: var(--muted);
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        font-size: 0.9rem;
+      }
+      .meta div {
+        display: grid;
+      }
+      .meta dt {
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .meta dd {
+        margin: 0;
+        font-weight: 600;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-tint);
+        color: var(--accent);
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        width: fit-content;
+      }
+      .status::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      nav.toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        padding-block: 16px;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.92rem;
+      }
+      nav.toc a {
+        text-decoration: none;
+        font-weight: 600;
+      }
+      nav.toc a:hover {
+        text-decoration: underline;
+      }
+
+      section {
+        display: grid;
+        gap: 20px;
+        padding-block: 48px;
+        border-bottom: 1px solid var(--line);
+        scroll-margin-top: 16px;
+      }
+      section > header {
+        display: grid;
+        gap: 8px;
+      }
+
+      /* Direction strip: an indigo-dye gradient band */
+      .dye {
+        height: 84px;
+        border-radius: 12px;
+        max-width: 100%;
+        background:
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 9px),
+          linear-gradient(
+            90deg,
+            #f6f6f3 0%,
+            #e8edf6 14%,
+            #9db0d3 30%,
+            #4d6a9e 48%,
+            #24427a 66%,
+            #1a3360 84%,
+            #121f3b 100%
+          );
+        border: 1px solid var(--line);
+      }
+      .dye-legend {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--muted);
+        gap: 8px;
+      }
+
+      .cols-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        gap: 20px;
+      }
+      .cols-2 > * {
+        min-width: 0;
+      }
+      .note {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 16px 18px;
+        display: grid;
+        gap: 6px;
+      }
+
+      /* Swatches */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+        gap: 14px;
+      }
+      .swatch {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+        display: grid;
+        grid-template-rows: 92px auto;
+      }
+      .swatch .chip {
+        display: flex;
+        align-items: flex-end;
+        padding: 10px 12px;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .swatch .info {
+        padding: 10px 12px 12px;
+        display: grid;
+        gap: 2px;
+      }
+      .swatch .name {
+        font-weight: 700;
+      }
+      .swatch .role {
+        font-size: 0.86rem;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .swatch .tw {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--muted);
+      }
+      .group-label {
+        margin-top: 8px;
+      }
+
+      /* Proportion bar */
+      .ratio {
+        display: flex;
+        height: 28px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        max-width: 100%;
+      }
+      .ratio span {
+        display: block;
+        height: 100%;
+      }
+      .ratio-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .ratio-legend b {
+        color: var(--fg);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Tables */
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.92rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      th {
+        font-size: 0.72rem;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      td.num {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+      }
+      .pass {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: #ddefe5;
+        color: #1f4d38;
+      }
+      .pair {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 28px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      /* App preview panel: always rendered in the proposed light theme */
+      .preview {
+        background: var(--al-cotton);
+        color: var(--al-ink);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px;
+        display: grid;
+        gap: 16px;
+        min-width: 0;
+        font-family: var(--font-body);
+      }
+      .preview-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--al-muted);
+        font-weight: 600;
+      }
+
+      /* Type specimens */
+      .type-row {
+        display: grid;
+        grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+        gap: 6px 20px;
+        padding-block: 14px;
+        border-bottom: 1px solid var(--al-line);
+        align-items: baseline;
+      }
+      .type-row:last-child {
+        border-bottom: 0;
+      }
+      .type-row .spec {
+        font-size: 0.78rem;
+        color: var(--al-muted);
+        font-family: var(--font-mono);
+        line-height: 1.5;
+      }
+      .type-row .spec b {
+        font-family: var(--font-body);
+        font-size: 0.86rem;
+        color: var(--al-ink);
+        display: block;
+      }
+      .type-row .sample {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 560px) {
+        .type-row {
+          grid-template-columns: 1fr;
+        }
+      }
+      .d-display {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 750;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      .d-h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        line-height: 1.1;
+      }
+      .d-h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 650;
+        line-height: 1.2;
+      }
+      .d-h3 {
+        font-family: var(--font-body);
+        font-size: 1.125rem;
+        font-weight: 650;
+        line-height: 1.35;
+      }
+      .d-body {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      .d-small {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--al-muted);
+      }
+      .d-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--al-muted);
+      }
+
+      .font-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        gap: 14px;
+      }
+      .font-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+        min-width: 0;
+      }
+      .font-card .glyphs {
+        font-size: 2.6rem;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+
+      /* Spacing scale */
+      .scale {
+        display: grid;
+        gap: 8px;
+      }
+      .scale-row {
+        display: grid;
+        grid-template-columns: 64px 70px minmax(0, 1fr) minmax(0, 1.6fr);
+        gap: 12px;
+        align-items: center;
+        font-size: 0.88rem;
+      }
+      .scale-row .bar {
+        height: 14px;
+        background: var(--accent);
+        border-radius: 3px;
+        max-width: 100%;
+      }
+      .scale-row .tok {
+        font-family: var(--font-mono);
+        font-weight: 600;
+      }
+      .scale-row .px {
+        font-variant-numeric: tabular-nums;
+        color: var(--muted);
+      }
+      .scale-row .use {
+        color: var(--muted);
+      }
+      @media (max-width: 620px) {
+        .scale-row {
+          grid-template-columns: 52px 56px minmax(0, 1fr);
+        }
+        .scale-row .use {
+          grid-column: 1 / -1;
+          padding-left: 120px;
+          margin-top: -6px;
+        }
+      }
+
+      .radius-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .radius-row figure {
+        margin: 0;
+        display: grid;
+        gap: 6px;
+        justify-items: center;
+        font-size: 0.82rem;
+        text-align: center;
+      }
+      .radius-row .box {
+        width: 76px;
+        height: 56px;
+        background: var(--accent-tint);
+        border: 2px solid var(--accent);
+      }
+
+      /* Wireframes */
+      .wires {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        gap: 18px;
+      }
+      .wire {
+        display: grid;
+        gap: 10px;
+        min-width: 0;
+      }
+      .wire figcaption {
+        display: grid;
+        gap: 2px;
+      }
+      .wire figcaption b {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+      }
+      .wire figcaption .mono {
+        color: var(--muted);
+      }
+      figure.wire {
+        margin: 0;
+      }
+      .frame {
+        background: var(--al-cotton);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 260px;
+        font-size: 0.62rem;
+        color: var(--al-muted);
+      }
+      .f-head {
+        background: var(--al-surface);
+        border-bottom: 1px solid var(--al-line);
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .f-logo {
+        width: 46px;
+        height: 9px;
+        background: var(--al-indigo);
+        border-radius: 2px;
+      }
+      .f-nav {
+        display: flex;
+        gap: 5px;
+        margin-left: auto;
+      }
+      .f-nav i {
+        display: block;
+        width: 22px;
+        height: 6px;
+        background: var(--al-line);
+        border-radius: 2px;
+      }
+      .f-btn {
+        width: 30px;
+        height: 12px;
+        border-radius: 3px;
+        background: var(--al-ink);
+      }
+      .f-body {
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+      .f-foot {
+        background: var(--al-ink);
+        padding: 8px 10px;
+        display: flex;
+        gap: 6px;
+      }
+      .f-foot i {
+        display: block;
+        width: 26px;
+        height: 5px;
+        background: #4a5568;
+        border-radius: 2px;
+      }
+      .blk {
+        background: var(--al-surface);
+        border: 1px dashed var(--al-line-strong);
+        border-radius: 4px;
+        padding: 5px 6px;
+        color: var(--al-muted);
+      }
+      .blk.solid {
+        border-style: solid;
+        border-color: var(--al-line);
+      }
+      .blk.ind {
+        background: var(--al-indigo);
+        border-color: var(--al-indigo);
+        color: #fff;
+      }
+      .blk.saf {
+        background: var(--al-saffron-tint);
+        border-color: var(--al-saffron);
+        color: var(--al-ink);
+      }
+      .blk.dark {
+        background: var(--al-ink);
+        border-color: var(--al-ink);
+        color: #fff;
+      }
+      .g {
+        display: grid;
+        gap: 6px;
+      }
+      .g2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .g3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .g4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .g-detail {
+        grid-template-columns: 2fr 1fr;
+      }
+      .tall {
+        min-height: 46px;
+      }
+      .tall2 {
+        min-height: 70px;
+      }
+      .center-col {
+        max-width: 62%;
+        margin: 14px auto 0;
+        width: 100%;
+      }
+
+      /* Component previews (proposed app styles) */
+      .c-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn {
+        font: 600 0.95rem/1 var(--font-body);
+        padding: 0 16px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--al-indigo);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--al-indigo-dark);
+      }
+      .btn-secondary {
+        background: var(--al-surface);
+        color: var(--al-ink);
+        border-color: var(--al-line-strong);
+      }
+      .btn-secondary:hover {
+        background: var(--al-indigo-tint);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--al-indigo);
+      }
+      .btn-ghost:hover {
+        background: var(--al-indigo-tint);
+      }
+      .btn-github {
+        background: var(--al-ink);
+        color: #fff;
+        height: 44px;
+      }
+      .btn-github:hover {
+        background: #0f1520;
+      }
+      .btn:focus-visible {
+        outline: 3px solid var(--al-saffron);
+        outline-offset: 2px;
+      }
+      .btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+        flex: none;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+      }
+      .field label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .field input,
+      .field select {
+        font: 400 1rem var(--font-body);
+        height: 42px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border: 1px solid var(--al-line-strong);
+        background: var(--al-surface);
+        color: var(--al-ink);
+        width: 100%;
+        color-scheme: light;
+      }
+      .field input:focus,
+      .field select:focus {
+        outline: 3px solid var(--al-indigo-tint);
+        border-color: var(--al-indigo);
+      }
+      .field.error input {
+        border-color: var(--al-madder);
+      }
+      .field .hint {
+        font-size: 0.82rem;
+        color: var(--al-muted);
+      }
+      .field .err {
+        font-size: 0.82rem;
+        color: var(--al-madder);
+        font-weight: 600;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        height: 24px;
+        padding: 0 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .badge-cat {
+        background: var(--al-indigo-tint);
+        color: var(--al-indigo);
+      }
+      .badge-country {
+        background: var(--al-saffron-tint);
+        color: var(--al-ink);
+      }
+
+      .item-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+        gap: 16px;
+      }
+      .item-card {
+        background: var(--al-surface);
+        border: 1px solid var(--al-line);
+        border-radius: 12px;
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+        align-content: start;
+        transition:
+          box-shadow 0.15s,
+          border-color 0.15s;
+      }
+      .item-card:hover {
+        border-color: var(--al-line-strong);
+        box-shadow: 0 6px 18px rgba(27, 36, 51, 0.08);
+      }
+      .item-card h4 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 650;
+        margin: 0;
+        line-height: 1.25;
+      }
+      .item-card p {
+        font-size: 0.9rem;
+        color: var(--al-muted);
+        line-height: 1.5;
+      }
+      .item-card .by {
+        font-size: 0.85rem;
+        color: var(--al-ink);
+        font-weight: 600;
+      }
+
+      .empty {
+        background: var(--al-surface);
+        border: 1px dashed var(--al-line-strong);
+        border-radius: 12px;
+        padding: 22px;
+        display: grid;
+        gap: 8px;
+        justify-items: start;
+      }
+
+      .callout {
+        border-left: 3px solid var(--accent);
+        padding: 4px 0 4px 14px;
+      }
+
+      pre.code {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 100%;
+      }
+
+      footer.end {
+        padding-top: 32px;
+        font-size: 0.88rem;
+        color: var(--muted);
+        display: grid;
+        gap: 6px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <span class="eyebrow">ArtisanLink · WDD 430 team project</span>
+        <h1>Indigo &amp; Cotton: the ArtisanLink design language</h1>
+        <p class="lede">
+          A proposed color palette, type system, spacing scale and layout patterns for the craft
+          marketplace, for the team to review and agree on before anyone styles a page.
+        </p>
+        <dl class="meta">
+          <div>
+            <dt>Prepared by</dt>
+            <dd>Daniel Paulino</dd>
+          </div>
+          <div>
+            <dt>Date</dt>
+            <dd>November 13, 2026</dd>
+          </div>
+          <div>
+            <dt>Stack</dt>
+            <dd>Next.js 16 · Tailwind CSS v4</dd>
+          </div>
+        </dl>
+      </header>
+
+      <nav class="toc" aria-label="Sections">
+        <a href="#direction">Direction</a>
+        <a href="#color">Color</a>
+        <a href="#type">Typography</a>
+        <a href="#spacing">Spacing</a>
+        <a href="#layouts">Layout patterns</a>
+        <a href="#components">Components</a>
+        <a href="#library">UI library</a>
+      </nav>
+
+      <!-- DIRECTION -->
+      <section id="direction">
+        <header>
+          <span class="eyebrow">Design direction</span>
+          <h2>Natural dye on undyed cloth</h2>
+        </header>
+        <p>
+          ArtisanLink is a showcase for handmade work from many countries, browsed by an
+          international audience. The palette borrows from a material almost every craft tradition
+          shares: indigo dye. Japanese aizome, Nigerian adire, Indian block prints and Guatemalan
+          textiles all use it. The page itself stays quiet, like undyed cotton, so the crafts and
+          their makers are what people notice.
+        </p>
+        <div
+          class="dye"
+          role="img"
+          aria-label="A gradient from undyed cotton white through light indigo to deep indigo, the range the palette is drawn from"
+        ></div>
+        <div class="dye-legend">
+          <span>Undyed cotton</span><span>First dip</span><span>Mid indigo</span
+          ><span>Deep indigo</span>
+        </div>
+        <div class="cols-2">
+          <div class="note">
+            <h3>What the visual language should feel like</h3>
+            <p class="muted">
+              Calm, trustworthy, readable in any language. A catalog first, so listings and contact
+              details stay legible and scannable.
+            </p>
+          </div>
+          <div class="note">
+            <h3>What it should avoid</h3>
+            <p class="muted">
+              Loud retail styling, discount-store reds and decoration competing with listings. The
+              spec has no images, prices or payments, so type and color carry the whole design.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLOR -->
+      <section id="color">
+        <header>
+          <span class="eyebrow">Color palette</span>
+          <h2>Four families, each with a single job</h2>
+          <p class="muted">
+            Indigo is for action, saffron for highlights, neutrals for reading, and madder and moss
+            only for feedback. Token names become Tailwind utilities, for example
+            <code>bg-indigo</code>, <code>text-ink</code>, <code>border-line</code>.
+          </p>
+        </header>
+
+        <h3 class="group-label">Brand</h3>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: #24427a; color: #fff">#24427A</div>
+            <div class="info">
+              <span class="name">Indigo</span
+              ><span class="role">Primary buttons, links, logo, active nav</span
+              ><span class="tw">bg-indigo · text-indigo</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #1a3360; color: #fff">#1A3360</div>
+            <div class="info">
+              <span class="name">Indigo Dark</span
+              ><span class="role">Hover and pressed states for primary actions</span
+              ><span class="tw">hover:bg-indigo-dark</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #e8edf6; color: #24427a">#E8EDF6</div>
+            <div class="info">
+              <span class="name">Indigo Tint</span
+              ><span class="role">Category badges, selected filters, focus ring</span
+              ><span class="tw">bg-indigo-tint</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #e3a62f; color: #1b2433">#E3A62F</div>
+            <div class="info">
+              <span class="name">Saffron</span
+              ><span class="role"
+                >Accent only: highlights, keyboard focus, hero detail. Never body text</span
+              ><span class="tw">bg-saffron</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #fbefd3; color: #1b2433">#FBEFD3</div>
+            <div class="info">
+              <span class="name">Saffron Tint</span
+              ><span class="role">Country badges, info banners</span
+              ><span class="tw">bg-saffron-tint</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="group-label">Neutrals</h3>
+        <div class="swatches">
+          <div class="swatch">
+            <div
+              class="chip"
+              style="background: #f6f6f3; color: #1b2433; border-bottom: 1px solid #d9dde4"
+            >
+              #F6F6F3
+            </div>
+            <div class="info">
+              <span class="name">Cotton</span><span class="role">Page background</span
+              ><span class="tw">bg-cotton</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div
+              class="chip"
+              style="background: #ffffff; color: #1b2433; border-bottom: 1px solid #d9dde4"
+            >
+              #FFFFFF
+            </div>
+            <div class="info">
+              <span class="name">Surface</span><span class="role">Cards, header, forms, inputs</span
+              ><span class="tw">bg-surface</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #1b2433; color: #fff">#1B2433</div>
+            <div class="info">
+              <span class="name">Ink</span
+              ><span class="role">Headings, body text, footer, GitHub button</span
+              ><span class="tw">text-ink · bg-ink</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #586274; color: #fff">#586274</div>
+            <div class="info">
+              <span class="name">Muted</span
+              ><span class="role">Secondary text, helper text, captions</span
+              ><span class="tw">text-muted</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #d9dde4; color: #1b2433">#D9DDE4</div>
+            <div class="info">
+              <span class="name">Line</span
+              ><span class="role">Dividers and card borders (decorative)</span
+              ><span class="tw">border-line</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #7c8597; color: #fff">#7C8597</div>
+            <div class="info">
+              <span class="name">Line Strong</span
+              ><span class="role">Input and select borders (meets 3:1 for controls)</span
+              ><span class="tw">border-line-strong</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="group-label">Feedback</h3>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: #a23b32; color: #fff">#A23B32</div>
+            <div class="info">
+              <span class="name">Madder</span
+              ><span class="role">Validation errors, destructive actions (FR-003 messages)</span
+              ><span class="tw">text-madder · border-madder</span>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #2e6b4f; color: #fff">#2E6B4F</div>
+            <div class="info">
+              <span class="name">Moss</span
+              ><span class="role">Success messages, "Product published" confirmation</span
+              ><span class="tw">text-moss · bg-moss</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="group-label">How much of each color on a screen</h3>
+        <div
+          class="ratio"
+          role="img"
+          aria-label="Approximate color proportions: 70 percent neutrals, 20 percent ink, 8 percent indigo, 2 percent saffron"
+        >
+          <span style="width: 70%; background: linear-gradient(90deg, #f6f6f3, #ffffff)"></span>
+          <span style="width: 20%; background: #1b2433"></span>
+          <span style="width: 8%; background: #24427a"></span>
+          <span style="width: 2%; background: #e3a62f"></span>
+        </div>
+        <div class="ratio-legend">
+          <span><b>70%</b> cotton and surface</span><span><b>20%</b> ink text</span
+          ><span><b>8%</b> indigo actions</span><span><b>2%</b> saffron accent</span>
+        </div>
+
+        <h3 class="group-label">Contrast check (WCAG 2.2)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sample</th>
+                <th>Text on background</th>
+                <th>Ratio</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pair" style="background: #f6f6f3; color: #1b2433">Aa</span></td>
+                <td>Ink on Cotton (body text)</td>
+                <td class="num">14.40 : 1</td>
+                <td><span class="pass">AAA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #f6f6f3; color: #586274">Aa</span></td>
+                <td>Muted on Cotton (helper text)</td>
+                <td class="num">5.68 : 1</td>
+                <td><span class="pass">AA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #24427a; color: #ffffff">Aa</span></td>
+                <td>White on Indigo (primary button)</td>
+                <td class="num">9.83 : 1</td>
+                <td><span class="pass">AAA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #f6f6f3; color: #24427a">Aa</span></td>
+                <td>Indigo on Cotton (links)</td>
+                <td class="num">9.08 : 1</td>
+                <td><span class="pass">AAA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #e3a62f; color: #1b2433">Aa</span></td>
+                <td>Ink on Saffron (highlight)</td>
+                <td class="num">7.25 : 1</td>
+                <td><span class="pass">AAA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #e8edf6; color: #24427a">Aa</span></td>
+                <td>Indigo on Indigo Tint (category badge)</td>
+                <td class="num">8.37 : 1</td>
+                <td><span class="pass">AAA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #ffffff; color: #a23b32">Aa</span></td>
+                <td>Madder on Surface (error text)</td>
+                <td class="num">6.55 : 1</td>
+                <td><span class="pass">AA</span></td>
+              </tr>
+              <tr>
+                <td><span class="pair" style="background: #ffffff; color: #2e6b4f">Aa</span></td>
+                <td>Moss on Surface (success text)</td>
+                <td class="num">6.30 : 1</td>
+                <td><span class="pass">AA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">
+          Rule: never put white text on Saffron, and never use Saffron or Line for text. Every text
+          pairing above meets AA (4.5 : 1) or better.
+        </p>
+      </section>
+
+      <!-- TYPE -->
+      <section id="type">
+        <header>
+          <span class="eyebrow">Typography</span>
+          <h2>A display face with character, a body face built for reading</h2>
+        </header>
+        <div class="font-cards">
+          <div class="font-card">
+            <span class="eyebrow">Display · headings, logo, hero</span>
+            <div class="glyphs" style="font-family: var(--font-display); font-weight: 700">
+              Bricolage Grotesque
+            </div>
+            <p class="muted">
+              A grotesque with ink traps and slightly irregular curves, so headings feel
+              hand-finished without becoming a costume font. Variable weight 400–800 and optical
+              size, so one file covers every heading.
+            </p>
+          </div>
+          <div class="font-card">
+            <span class="eyebrow">Body · text, forms, buttons, labels</span>
+            <div class="glyphs" style="font-family: var(--font-body); font-weight: 500">
+              Figtree
+            </div>
+            <p class="muted">
+              A friendly geometric sans with open letterforms and clear numerals. It reads well at
+              small sizes, covers Latin Extended for accented artisan and country names (Oaxaca,
+              Côte d'Ivoire, Đà Nẵng), and has variable weight 300–900.
+            </p>
+          </div>
+        </div>
+        <p class="muted">
+          Both are free Google Fonts loaded with <code>next/font/google</code>, so they are
+          self-hosted at build time with no layout shift. Fallback stack:
+          <code>system-ui, "Segoe UI", sans-serif</code>.
+        </p>
+
+        <div class="preview" aria-label="Type scale preview">
+          <span class="preview-label">Type scale, in the app's light theme</span>
+          <div>
+            <div class="type-row">
+              <div class="spec"><b>Display</b>text-5xl · 48px · 750<br />hero only</div>
+              <div class="sample d-display">Handmade, from everywhere</div>
+            </div>
+            <div class="type-row">
+              <div class="spec"><b>H1</b>text-4xl · 36px · 700<br />one per page</div>
+              <div class="sample d-h1">Browse products</div>
+            </div>
+            <div class="type-row">
+              <div class="spec"><b>H2</b>text-2xl · 24px · 650<br />section titles</div>
+              <div class="sample d-h2">Contact the artisan</div>
+            </div>
+            <div class="type-row">
+              <div class="spec">
+                <b>H3</b>text-lg · 18px · 650 · Figtree<br />card titles, form groups
+              </div>
+              <div class="sample d-h3">Hand-woven alpaca scarf</div>
+            </div>
+            <div class="type-row">
+              <div class="spec"><b>Body</b>text-base · 16px · 400<br />leading-relaxed (1.6)</div>
+              <div class="sample d-body">
+                Woven on a backstrap loom by the Quispe family in Cusco, using naturally dyed alpaca
+                wool.
+              </div>
+            </div>
+            <div class="type-row">
+              <div class="spec"><b>Small</b>text-sm · 14px · 400<br />helper text, meta</div>
+              <div class="sample d-small">Listed by Rosa Quispe · Peru</div>
+            </div>
+            <div class="type-row">
+              <div class="spec">
+                <b>Label</b>text-xs · 12px · 600<br />uppercase, tracking-wider
+              </div>
+              <div class="sample d-label">Category · Textiles</div>
+            </div>
+          </div>
+        </div>
+        <div class="cols-2">
+          <div class="note">
+            <h3>Rules</h3>
+            <p class="muted">
+              Bricolage only for Display, H1 and H2, plus the logo. Everything else is Figtree. Body
+              text never below 16px. Keep paragraphs under about 70 characters wide
+              (<code>max-w-prose</code>).
+            </p>
+          </div>
+          <div class="note">
+            <h3>Weights we use</h3>
+            <p class="muted">
+              400 regular, 600 semibold (labels, buttons), 650–750 for headings. No light weights:
+              they thin out on low-quality screens.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPACING -->
+      <section id="spacing">
+        <header>
+          <span class="eyebrow">Spacing &amp; sizing</span>
+          <h2>A 4px grid, using a short list of Tailwind steps</h2>
+          <p class="muted">
+            We keep Tailwind's default 4px spacing unit and agree to use only these steps. Fewer
+            choices keep pages built by four different people looking like one product.
+          </p>
+        </header>
+        <div class="scale">
+          <div class="scale-row">
+            <span class="tok">1</span><span class="px">4px</span>
+            <div class="bar" style="width: 4px"></div>
+            <span class="use">Icon to text inside a badge</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">2</span><span class="px">8px</span>
+            <div class="bar" style="width: 8px"></div>
+            <span class="use">Label to input, gap in a button</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">3</span><span class="px">12px</span>
+            <div class="bar" style="width: 12px"></div>
+            <span class="use">Between badges, tight lists</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">4</span><span class="px">16px</span>
+            <div class="bar" style="width: 16px"></div>
+            <span class="use">Mobile page gutter, inside small cards</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">6</span><span class="px">24px</span>
+            <div class="bar" style="width: 24px"></div>
+            <span class="use">Card padding, grid gap, between form fields</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">8</span><span class="px">32px</span>
+            <div class="bar" style="width: 32px"></div>
+            <span class="use">Desktop gutter, heading to content</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">12</span><span class="px">48px</span>
+            <div class="bar" style="width: 48px"></div>
+            <span class="use">Section padding on mobile</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">16</span><span class="px">64px</span>
+            <div class="bar" style="width: 64px"></div>
+            <span class="use">Section padding on desktop, header height</span>
+          </div>
+          <div class="scale-row">
+            <span class="tok">24</span><span class="px">96px</span>
+            <div class="bar" style="width: 96px"></div>
+            <span class="use">Hero top and bottom padding</span>
+          </div>
+        </div>
+
+        <div class="cols-2">
+          <div class="note">
+            <h3>Page container</h3>
+            <p class="muted">
+              <code>mx-auto max-w-6xl px-4 sm:px-6 lg:px-8</code> (1152px max). Forms and the login
+              card use <code>max-w-xl</code> (576px) so lines stay short.
+            </p>
+          </div>
+          <div class="note">
+            <h3>Breakpoints</h3>
+            <p class="muted">
+              Tailwind defaults, mobile first: <code>sm</code> 640, <code>md</code> 768,
+              <code>lg</code> 1024, <code>xl</code> 1280. Every page must work at 360px wide.
+            </p>
+          </div>
+          <div class="note">
+            <h3>Vertical rhythm</h3>
+            <p class="muted">
+              Sections: <code>py-12 md:py-16</code>. Inside a section: <code>space-y-6</code> or
+              <code>gap-6</code>. Use flex/grid <code>gap</code> instead of margins on children.
+            </p>
+          </div>
+          <div class="note">
+            <h3>Elevation</h3>
+            <p class="muted">
+              Flat by default: borders, not shadows. A soft shadow appears only on ProductCard hover
+              and on menus (<code>shadow-md</code>).
+            </p>
+          </div>
+        </div>
+
+        <h3>Corner radius by role</h3>
+        <div class="radius-row">
+          <figure>
+            <div class="box" style="border-radius: 4px"></div>
+            <figcaption><b>4px</b><br /><code>rounded</code><br />code, small chips</figcaption>
+          </figure>
+          <figure>
+            <div class="box" style="border-radius: 8px"></div>
+            <figcaption><b>8px</b><br /><code>rounded-lg</code><br />buttons, inputs</figcaption>
+          </figure>
+          <figure>
+            <div class="box" style="border-radius: 12px"></div>
+            <figcaption><b>12px</b><br /><code>rounded-xl</code><br />cards, panels</figcaption>
+          </figure>
+          <figure>
+            <div class="box" style="border-radius: 999px"></div>
+            <figcaption><b>Full</b><br /><code>rounded-full</code><br />badges, avatars</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- LAYOUTS -->
+      <section id="layouts">
+        <header>
+          <span class="eyebrow">Layout patterns</span>
+          <h2>One app shell, a layout for every route</h2>
+          <p class="muted">
+            Every route in our team plan shares the same header and footer. Wireframes use the
+            proposed colors so the balance of each screen is visible. Dashed boxes are content;
+            solid boxes are components. Each caption names the teammate who owns that page.
+          </p>
+        </header>
+        <div class="wires">
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk tall2" style="background: #fff">
+                  Hero: headline, one line of copy, "Browse crafts" (indigo) + "Share your craft"
+                </div>
+                <div class="g g3">
+                  <div class="blk saf">Discover</div>
+                  <div class="blk saf">Filter</div>
+                  <div class="blk saf">Contact</div>
+                </div>
+                <div class="g g4">
+                  <div class="blk solid">Cat.</div>
+                  <div class="blk solid">Cat.</div>
+                  <div class="blk solid">Cat.</div>
+                  <div class="blk solid">Cat.</div>
+                </div>
+                <div class="blk ind">CTA band: "Are you an artisan? Sign in with GitHub"</div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Home</b><span class="mono">/</span
+              ><span class="muted"
+                >Owner: Daniel. Explains the site, links to /products and to sign-in.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+              </div>
+              <div class="f-body">
+                <div class="center-col g">
+                  <div
+                    class="blk solid"
+                    style="text-align: center; padding: 10px 6px; display: grid; gap: 6px"
+                  >
+                    <span>Sign in to list your crafts</span>
+                    <span class="blk dark" style="border-style: solid">Continue with GitHub</span>
+                    <span>Browsing doesn't need an account</span>
+                  </div>
+                  <div class="blk" style="border-color: #a23b32; color: #a23b32">
+                    Error message slot (?error=…)
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Login</b><span class="mono">/login</span
+              ><span class="muted"
+                >Owner: Daniel. One centered card, <code>max-w-sm</code>, single GitHub
+                action.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">H1 + result count</div>
+                <div class="g g3">
+                  <div class="blk solid">Category ▾</div>
+                  <div class="blk solid">Country ▾</div>
+                  <div class="blk solid">Clear</div>
+                </div>
+                <div class="g g3">
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Products</b><span class="mono">/products</span
+              ><span class="muted"
+                >Owner: Samar. Filter bar above a grid: 1 column on mobile, 2 at <code>sm</code>, 3
+                at <code>lg</code>. Empty state replaces the grid.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">← Back to products</div>
+                <div class="g g-detail">
+                  <div class="g">
+                    <div class="blk">Badges: category, country</div>
+                    <div class="blk" style="font-size: 0.7rem">H1 title</div>
+                    <div class="blk tall2">Description</div>
+                  </div>
+                  <div class="g" style="align-content: start">
+                    <div class="blk solid">Artisan name → profile</div>
+                    <div class="blk ind">WhatsApp</div>
+                    <div class="blk solid">Email</div>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Product details</b><span class="mono">/products/[id]</span
+              ><span class="muted"
+                >Owner: Samar. Two columns at <code>lg</code> (2 : 1), contact panel sticky on the
+                right; stacks on mobile with contact first after the title.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="g" style="grid-template-columns: auto 1fr; align-items: center">
+                  <div
+                    class="blk solid"
+                    style="width: 34px; height: 34px; border-radius: 50%; padding: 0"
+                  ></div>
+                  <div class="blk">Artisan name, country, short bio</div>
+                </div>
+                <div class="blk" style="font-size: 0.7rem">H2 Crafts by this artisan</div>
+                <div class="g g3">
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                  <div class="blk solid tall">ProductCard</div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Artisan profile</b><span class="mono">/artisans/[id]</span
+              ><span class="muted"
+                >Owner: Shania. Public page. Profile header with GitHub avatar, then the same
+                product grid as <code>/products</code>.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="g" style="grid-template-columns: 1fr auto; align-items: center">
+                  <div class="blk" style="font-size: 0.7rem">H1 My products</div>
+                  <div class="blk ind">+ Add product</div>
+                </div>
+                <div class="g">
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Product title · category</span><span>Edit · Delete</span>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Artisan dashboard</b><span class="mono">/dashboard/products</span
+              ><span class="muted"
+                >Owner: Shania. Signed-in artisans only. A simple list (not cards) so editing and
+                deleting are quick to scan. Delete asks for confirmation.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="center-col g">
+                  <div class="blk" style="font-size: 0.7rem">H1 Add a product</div>
+                  <div class="blk solid">Title</div>
+                  <div class="blk solid tall">Description</div>
+                  <div class="g g2">
+                    <div class="blk solid">Category</div>
+                    <div class="blk solid">Country</div>
+                  </div>
+                  <div class="blk solid">Artisan name</div>
+                  <div class="g g2">
+                    <div class="blk solid">WhatsApp</div>
+                    <div class="blk solid">Email</div>
+                  </div>
+                  <div class="blk ind" style="width: 50%">Publish product</div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Add / edit product</b><span class="mono">/dashboard/products/new</span
+              ><span class="muted"
+                >Owner: Shania (ProductForm). Same form for editing. Single column,
+                <code>max-w-xl</code>, errors under each field. Exact route to confirm with
+                Shania.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">H1 Checkout</div>
+                <div class="g g-detail">
+                  <div class="g" style="align-content: start">
+                    <div class="blk solid">Product · qty · price</div>
+                    <div class="blk solid">Product · qty · price</div>
+                    <div class="blk solid">Shipping / contact fields</div>
+                  </div>
+                  <div class="g" style="align-content: start">
+                    <div class="blk saf">Order summary + total</div>
+                    <div class="blk ind">Place order</div>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Checkout</b><span class="mono">/checkout</span
+              ><span class="muted"
+                >Owner: Martha. Same 2 : 1 split as product details; the summary panel stays sticky
+                on the right and moves below the list on mobile.</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div class="blk" style="font-size: 0.7rem">H1 My orders</div>
+                <div class="g">
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                  <div class="blk solid" style="display: flex; justify-content: space-between">
+                    <span>Order #, date, total</span><span>Status badge</span>
+                  </div>
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Orders</b><span class="mono">/orders</span
+              ><span class="muted"
+                >Owner: Martha. List rows like the dashboard. Status uses badges: pending (saffron
+                tint), confirmed (moss), cancelled (madder).</span
+              >
+            </figcaption>
+          </figure>
+
+          <figure class="wire">
+            <div class="frame" aria-hidden="true">
+              <div class="f-head">
+                <div class="f-logo"></div>
+                <div class="f-nav"><i></i><i></i></div>
+                <div class="f-btn"></div>
+              </div>
+              <div class="f-body">
+                <div
+                  class="blk tall2 solid"
+                  style="display: grid; place-items: center; text-align: center"
+                >
+                  404: "We couldn't find that product" + Back to products
+                </div>
+              </div>
+              <div class="f-foot"><i></i><i></i><i></i></div>
+            </div>
+            <figcaption>
+              <b>Not found</b><span class="mono">not-found.tsx</span
+              ><span class="muted"
+                >Covers unknown product and artisan IDs (FR-009). Same shell, centered
+                message.</span
+              >
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="cols-2">
+          <div class="note">
+            <h3>Header (Daniel)</h3>
+            <p class="muted">
+              White surface, bottom border, 64px tall, sticky. Left: ArtisanLink wordmark in
+              Bricolage, indigo. Center/right: "Products" and "Orders". Far right: "Sign in" button,
+              or the GitHub avatar with a menu (My products, Add product, Sign out) when signed in.
+              Collapses to a menu button below <code>md</code>.
+            </p>
+          </div>
+          <div class="note">
+            <h3>Footer (Daniel)</h3>
+            <p class="muted">
+              Ink background, white and muted-light text. Three short columns: About ArtisanLink,
+              Explore (Products, Sell your crafts), Team (four member names, course WDD 430). Stacks
+              to one column on mobile.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPONENTS -->
+      <section id="components">
+        <header>
+          <span class="eyebrow">Shared components</span>
+          <h2>The small kit every page builds from</h2>
+          <p class="muted">
+            These live previews use the exact proposed tokens. Each becomes one file in
+            <code>app/ui/</code> so nobody restyles buttons page by page. Button and InputField are
+            built by Martha, ProductCard by Samar and ProductForm by Shania, all from these styles.
+          </p>
+        </header>
+
+        <div class="preview">
+          <span class="preview-label">Buttons</span>
+          <div class="c-row">
+            <button class="btn btn-primary" type="button">Publish product</button>
+            <button class="btn btn-secondary" type="button">Clear filters</button>
+            <button class="btn btn-ghost" type="button">Back to products</button>
+            <button class="btn btn-github" type="button">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                /></svg
+              >Continue with GitHub
+            </button>
+          </div>
+          <p class="d-small">
+            One primary button per screen. Keyboard focus shows a saffron ring so it stands out
+            against indigo.
+          </p>
+        </div>
+
+        <div class="preview">
+          <span class="preview-label">InputField and validation (used in ProductForm)</span>
+          <div class="cols-2">
+            <div class="field">
+              <label for="f-title">Title</label>
+              <input id="f-title" type="text" value="Hand-woven alpaca scarf" />
+              <span class="hint">What buyers will see on the products page.</span>
+            </div>
+            <div class="field">
+              <label for="f-country">Country</label>
+              <select id="f-country">
+                <option>Peru</option>
+                <option>Ghana</option>
+                <option>Japan</option>
+                <option>Mexico</option>
+              </select>
+            </div>
+            <div class="field error">
+              <label for="f-email">Email</label>
+              <input
+                id="f-email"
+                type="email"
+                value="rosa.quispe@"
+                aria-invalid="true"
+                aria-describedby="f-email-err"
+              />
+              <span class="err" id="f-email-err"
+                >Enter a full email address, like name@example.com.</span
+              >
+            </div>
+            <div class="field">
+              <label for="f-wa">WhatsApp number</label>
+              <input id="f-wa" type="tel" value="+51 984 123 456" />
+              <span class="hint">Include the country code. Add WhatsApp, email or both.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview">
+          <span class="preview-label">ProductCard and badges (/products grid)</span>
+          <div class="item-cards">
+            <article class="item-card">
+              <div class="c-row" style="gap: 6px">
+                <span class="badge badge-cat">Textiles</span
+                ><span class="badge badge-country">Peru</span>
+              </div>
+              <h4>Hand-woven alpaca scarf</h4>
+              <p>Backstrap-loom weaving with naturally dyed alpaca wool from the Sacred Valley.</p>
+              <span class="by">Rosa Quispe</span>
+            </article>
+            <article class="item-card">
+              <div class="c-row" style="gap: 6px">
+                <span class="badge badge-cat">Ceramics</span
+                ><span class="badge badge-country">Mexico</span>
+              </div>
+              <h4>Barro negro water jug</h4>
+              <p>Burnished black clay from San Bartolo Coyotepec, fired in an open pit kiln.</p>
+              <span class="by">Elena Martínez</span>
+            </article>
+            <article class="item-card">
+              <div class="c-row" style="gap: 6px">
+                <span class="badge badge-cat">Textiles</span
+                ><span class="badge badge-country">Ghana</span>
+              </div>
+              <h4>Kente stole, 2 strips</h4>
+              <p>Strip-woven on a narrow loom in Bonwire. Gold and green Adwini Asa pattern.</p>
+              <span class="by">Kwame Asante</span>
+            </article>
+          </div>
+          <p class="d-small">
+            Sample listings for illustration only. Whole card is the link to the detail page.
+          </p>
+        </div>
+
+        <div class="preview">
+          <span class="preview-label">Empty results (FR-009)</span>
+          <div class="empty">
+            <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin: 0">
+              No products match Woodwork in Japan
+            </h4>
+            <p class="d-small">
+              Try another country or category, or clear the filters to see everything.
+            </p>
+            <button class="btn btn-secondary" type="button">Clear filters</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIBRARY -->
+      <section id="library" style="border-bottom: 0">
+        <header>
+          <span class="eyebrow">Shared UI library</span>
+          <h2>Recommendation: Tailwind v4 tokens plus our own small component kit</h2>
+        </header>
+        <div class="cols-2">
+          <div class="note">
+            <h3>Use</h3>
+            <p class="muted">
+              Tailwind CSS v4, already installed. Define the palette, fonts and radii once with
+              <code>@theme</code> in <code>app/globals.css</code>. Build a small set of components
+              in <code>app/ui/</code>: Button, InputField, Select, Badge, ProductCard, ProductForm,
+              EmptyState.
+            </p>
+          </div>
+          <div class="note">
+            <h3>Skip for now: shadcn/ui</h3>
+            <p class="muted">
+              The spec has no modals, tables, date pickers or menus beyond the header. shadcn would
+              add Radix packages and its own token names for a few buttons. If we need a dialog or
+              dropdown later, it can be added on top of these same tokens.
+            </p>
+          </div>
+        </div>
+        <p class="muted">
+          Proposed <code>app/globals.css</code> theme block. Once agreed, every teammate uses these
+          utilities and no hex values in components:
+        </p>
+        <pre class="code">
+@import "tailwindcss";
+
+@theme {
+  /* Brand */
+  --color-indigo: #24427A;
+  --color-indigo-dark: #1A3360;
+  --color-indigo-tint: #E8EDF6;
+  --color-saffron: #E3A62F;
+  --color-saffron-tint: #FBEFD3;
+
+  /* Neutrals */
+  --color-cotton: #F6F6F3;
+  --color-surface: #FFFFFF;
+  --color-ink: #1B2433;
+  --color-muted: #586274;
+  --color-line: #D9DDE4;
+  --color-line-strong: #7C8597;
+
+  /* Feedback */
+  --color-madder: #A23B32;
+  --color-moss: #2E6B4F;
+
+  /* Type (variables set by next/font in app/layout.tsx) */
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-sans: var(--font-figtree), system-ui, "Segoe UI", sans-serif;
+}
+
+body { @apply bg-cotton text-ink font-sans antialiased; }</pre>
+        <p class="muted">
+          Usage: <code>&lt;h1 className="font-display text-4xl font-bold"&gt;</code>,
+          <code
+            >&lt;button className="rounded-lg bg-indigo px-4 h-10 text-white
+            hover:bg-indigo-dark"&gt;</code
+          >.
+        </p>
+      </section>
+
+      <footer class="end">
+        <span>ArtisanLink · WDD 430 Web Full-Stack Development</span>
+        <span>Team: Samar El Jawabry, Shania Esguerra, Martha Itohan Otasowie, Daniel Paulino</span>
+      </footer>
+    </div>
+  </body>
+</html>

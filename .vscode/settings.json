@@ -1,0 +1,6 @@
+{
+  // Tailwind v4 at-rules (@theme, @apply, @layer...) are valid; VS Code's built-in CSS checker doesn't know them.
+  "css.lint.unknownAtRules": "ignore",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
